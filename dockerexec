@@ -1,0 +1,58 @@
+#!/bin/bash
+
+if [ -z ${SHRC} ]; then
+  if [ -f "${HOME}/.dockershrc" ]; then
+    SHRC="${HOME}/.dockershrc"
+  elif [ -f "`pwd`/.dockershrc" ]; then
+    SHRC="`pwd`/.dockershrc"
+  else
+    echo >&2 '.dockershrc not found'
+    exit 1
+  fi
+fi
+if [ -z ${SHRCD} ]; then
+  if [ -d "${HOME}/.dockershrc.d" ]; then
+    SHRCD="${HOME}/.dockershrc.d"
+  elif [ -d "`pwd`/.dockershrc.d" ]; then
+    SHRCD="`pwd`/.dockershrc.d"
+  else
+    echo >&2 '.dockershrc.d not found'
+    exit 1
+  fi
+fi
+BASE=`basename ${SHRCD}`
+DIR=`dirname ${SHRCD}`
+ARGS=("$@")
+CONTAINER=${ARGS[@]:$#-2:1}
+SH=${ARGS[@]:$#-1:1}
+OPTS=("${ARGS[@]:0:$#-2}")
+
+install() {
+  docker exec ${CONTAINER} sh -c "
+    if [ \`which apt-get\` ]; then
+      apt-get update && apt-get install -y ${SH} --no-install-recommends && \
+        rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
+    elif [ \`which apk\` ]; then
+      apk add --no-cache ${SH}
+    elif [ \`which dnf\` ]; then
+      dnf install -y ${SH} && rm -rf /var/cache/dnf/*
+    elif [ \`which yum\` ]; then
+      yum install -y ${SH} && rm -rf /var/cache/yum/*
+    fi
+  "
+}
+
+[ `docker exec ${CONTAINER} which ${SH}` ] || {
+  echo -n "${SH} not found in ${CONTAINER}. install? [y/n]"
+  read yn
+  [ $yn = 'y' ] && install ${CONTAINER} ${SH} || exit
+}
+
+TMP=`docker exec ${CONTAINER} mktemp -d`
+cd ${DIR} && tar cz ${BASE} | \
+  docker exec -i ${CONTAINER} ${SH} -c "tar xz -C ${TMP}"
+docker cp ${SHRC} ${CONTAINER}:${TMP}
+docker exec -it -e SHHOME="${TMP}/${BASE}" ${OPTS[@]} "${CONTAINER}" "${SH}" -c "\
+  chmod +x ${TMP}/.dockershrc
+  SH=${SH} . ${TMP}/.dockershrc
+  ${SH}; rm -rf ${TMP}"

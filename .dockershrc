@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# vim
+export VIMINIT="let \$MYVIMRC='${SHHOME}/.vimrc' \
+  | source \${MYVIMRC}"
+
+# bash
+# TODO
+
+# zsh
+export ZDOTDIR=${SHHOME}
