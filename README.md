@@ -13,7 +13,7 @@ cd
 git clone git@github.com:amaya382/dockerexec.git
 ln -s `pwd`/dockerexec/.dockershrc ~/dockershrc
 ln -s `pwd`/dockerexec/.dockershrc.d ~/dockershrc.d
-sudo mv dockerexec/dockerexec /usr/local/bin
+sudo cp dockerexec/dockerexec /usr/local/bin
 
 docker run --name foo -d --rm nginx:alpine
 dockerexec foo zsh
