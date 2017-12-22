@@ -10,18 +10,15 @@ A tiny wrapper for `docker exec -it`. Bring your `.bashrc`, `.zshrc`, `.vimrc`, 
 ## Example
 ```sh
 cd
-mkdir .dockershrc.d
-echo 'alias ll="ls -Al"' > .dockershrc.d/.zshrc
-echo 'set number' > .dockershrc.d/.vimrc
-wget https://github.com/amaya382/dockerexec/raw/master/.dockershrc
-wget https://github.com/amaya382/dockerexec/raw/master/dockerexec
-chmod +x dockerexec
-sudo mv dockerexec /usr/local/bin
+git clone git@github.com:amaya382/dockerexec.git
+ln -s `pwd`/dockerexec/.dockershrc ~/dockershrc
+ln -s `pwd`/dockerexec/.dockershrc.d ~/dockershrc.d
+sudo mv dockerexec/dockerexec /usr/local/bin
 
 docker run --name foo -d --rm nginx:alpine
 dockerexec foo zsh
 # zsh not found in foo. install? [y/n] y
-ll
+ll # on zsh w/ colored prompt
 # total 52
 # -rwxr-xr-x    1 root     root             0 Dec 21 22:40 .dockerenv*
 # drwxr-xr-x    1 root     root          4096 Dec 21 22:41 bin/
@@ -29,8 +26,8 @@ ll
 # drwxr-xr-x    1 root     root          4096 Dec 21 22:41 etc/
 # drwxr-xr-x    2 root     root          4096 Dec  1 16:32 home/
 # ...
-apk add --no-cache vim
-vim /etc/nginx/nginx.conf
+apk add --no-cache vim tmux
+vim /etc/nginx/nginx.conf # w/ line number
 #  1
 #  2 user  nginx;
 #  3 worker_processes  1;
@@ -38,6 +35,7 @@ vim /etc/nginx/nginx.conf
 #  5 error_log  /var/log/nginx/error.log warn;
 #  6 pid        /var/run/nginx.pid;
 #  ...
+tmux # on zsh w/ datetime prompt
 ```
 
 ### Options
