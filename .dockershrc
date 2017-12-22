@@ -7,7 +7,9 @@ RCHOME="${SHHOME}/${DOTDIR}"
 export VIMINIT="let \$MYVIMRC='${RCHOME}/.vimrc' | source \${MYVIMRC}"
 
 # bash
-# TODO
+function bash() {
+  `sh -c 'which bash'` --rcfile ${RCHOME}/.bashrc
+}
 
 # zsh
 export ZDOTDIR=${RCHOME}
