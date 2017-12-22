@@ -1,10 +1,26 @@
 #!/bin/sh
 
+DOTDIR='.dockershrc.d'
+RCHOME="${SHHOME}/${DOTDIR}"
+
 # vim
-export VIMINIT="let \$MYVIMRC='${SHHOME}/.vimrc' | source \${MYVIMRC}"
+export VIMINIT="let \$MYVIMRC='${RCHOME}/.vimrc' | source \${MYVIMRC}"
 
 # bash
 # TODO
 
 # zsh
-export ZDOTDIR=${SHHOME}
+export ZDOTDIR=${RCHOME}
+
+# tmux
+function tmux() {
+  TMUXDIR=/tmp/.tmux-dockershrc
+  [ -d ${TMUXDIR} ] || rm -rf ${TMUXDIR}
+  mkdir -p ${TMUXDIR}
+  find ${TMUXDIR} ! -name 'tmuxserver' -mindepth 1 -maxdepth 1 -exec rm -rf {} \;
+  cp -r ${SHHOME}/.dockershrc ${RCHOME} ${TMUXDIR}
+  SHHOME=${TMUXDIR} ZDOTDIR=${TMUXDIR}/${DOTDIR} \
+    `sh -c 'which tmux'` -2 \
+      -f ${TMUXDIR}/${DOTDIR}/.tmux.conf \
+      -S ${TMUXDIR}/tmuxserver $@
+}

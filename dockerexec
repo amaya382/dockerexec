@@ -51,8 +51,9 @@ install() {
 TMP=`docker exec ${CONTAINER} mktemp -d`
 cd ${DIR} && tar cz ${BASE} | \
   docker exec -i ${CONTAINER} ${SH} -c "tar xz -C ${TMP}"
-docker cp ${SHRC} ${CONTAINER}:${TMP}
-docker exec -it -e SHHOME="${TMP}/${BASE}" ${OPTS[@]} "${CONTAINER}" "${SH}" -c "\
+docker cp ${SHRC} ${CONTAINER}:${TMP}/.dockershrc
+docker exec -it -e SHHOME="${TMP}" ${OPTS[@]} "${CONTAINER}" "${SH}" -c "\
+  export SHELL=\`which ${SH}\`
   chmod +x ${TMP}/.dockershrc
   SH=${SH} . ${TMP}/.dockershrc
   ${SH}; rm -rf ${TMP}"
