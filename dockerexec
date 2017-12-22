@@ -43,7 +43,7 @@ install() {
 }
 
 [ `docker exec ${CONTAINER} which ${SH}` ] || {
-  echo -n "${SH} not found in ${CONTAINER}. install? [y/n]"
+  echo -n "${SH} not found in ${CONTAINER}. install? [y/n] "
   read yn
   [ $yn = 'y' ] && install ${CONTAINER} ${SH} || exit
 }

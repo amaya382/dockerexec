@@ -1,8 +1,7 @@
 #!/bin/sh
 
 # vim
-export VIMINIT="let \$MYVIMRC='${SHHOME}/.vimrc' \
-  | source \${MYVIMRC}"
+export VIMINIT="let \$MYVIMRC='${SHHOME}/.vimrc' | source \${MYVIMRC}"
 
 # bash
 # TODO

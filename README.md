@@ -1,5 +1,5 @@
 # dockerexec
-A tiny wrapper for `docker exec -it`. Bring your `.bashrc`, `.zshrc`, `.vimrc`, etc into docker container.
+A tiny wrapper for `docker exec -it`. Bring your `.bashrc`, `.zshrc`, `.vimrc`, etc into docker container, like [sshrc](https://github.com/Russell91/sshrc).
 
 ## How to use
 1. Create `.dockershrc.d` in your `${HOME}` and put your dotfiles into it
