@@ -1,3 +1,8 @@
+# This project has been deprecated. Use anyrc instead.
+
+[amaya382/anyrc](https://github.com/amaya382/anyrc)
+
+
 # dockerexec
 A tiny wrapper for `docker exec -it`. Bring your `.bashrc`, `.zshrc`, `.vimrc`, etc into docker container, like [sshrc](https://github.com/Russell91/sshrc).
 
